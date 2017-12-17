@@ -1,6 +1,7 @@
-# framefitter
+# Frame Fitter
 
-Website to fit frame
+Website based tools to fit twibbons / photo frame.
+Website is made entirely of html-css-jss.
 
-## Bugs
-Rotating 90 degree picture hasn't been implemented yet
+## Development Plans
+Adding GoogleSheets-based Web Service to provide multiple display picture

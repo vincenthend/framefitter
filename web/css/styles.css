@@ -1,7 +1,30 @@
+canvas {
+	background-color:#FFF;
+	border:#999 1px solid;
+}
+
 .row{
 	margin-top: 1rem;
 }
 
+.ribbon {	
+	width:100%;
+	margin: 0;
+	display:flex;
+	align-item:center;
+	justify-content:center;
+	background-color: #ffc107;
+	padding-top:1rem;
+	padding-bottom:1rem;
+	font-size:2rem;
+	color:#FFF;
+}
+
 #btnphoto{
 	width:16rem;
+}
+
+#btnsave{
+	width:20rem;
+	font-weight: bolder;
 }

@@ -3,14 +3,18 @@
     <title>Canvas Coba</title>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/styles.css">
+	
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>	
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="         crossorigin="anonymous"></script>
 	<script  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="  crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -23,12 +27,23 @@
 		</div>
 		<div class="row">
 			<div class="col-12 d-flex justify-content-center">
-				<input id="photoInput" type="file" accept="image/*" onchange="uploadPic()">
+				<input id="photoInput" type="file" accept="image/*" onchange="uploadPic()" style="display:none">
+				<button class="btn btn-info" onclick="document.getElementById('photoInput').click();">Select File</button>
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-12 d-flex justify-content-center">
+				Zoom
+			</div>
 			<div class="col-12">
 				<div id="slider"></div>
+			</div>
+		</div>		
+		<div class="row">
+			<div class="col-12 d-flex justify-content-center">
+				<button class="btn btn-info" onclick="rotation-=1; rotateImage()"><i class="fa fa-undo"></i></button>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<button class="btn btn-info" onclick="rotation+=1; rotateImage()"><i class="fa fa-redo"></i></button>
 			</div>
 		</div>
 		<div class="row">
@@ -37,140 +52,6 @@
 			</div>
 		</div>
 
-<script>
-    var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext("2d");
-    var photo = new Image();
-    var frame = new Image();
-	
-	var mouseDrag = false;
-	
-	var xpos = 0;
-	var ypos = 0;
-	var prevx = 0;
-	var prevy = 0;	
-	var photowidth;
-	var photoheight;
-	
-    function renderFrame() {
-        frame.src = 'img.png';
-        frame.onload = function () {
-            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
-        };
-    };
-	
-	function clearFrame(){
-		ctx.clearRect(0,0,canvas.width,canvas.height);
-	}
-
-    function uploadPic() {
-        var photoFile = $("#photoInput")[0].files[0];
-
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(photoFile);
-
-        fileReader.onload = function (e) {
-            photo.src = e.target.result;
-            photo.onload = function(){
-				xpos = 0;
-				ypos = 0;
-				slider.value = 50;
-				
-				if(photo.width < photo.height){
-					photowidth = canvas.width;
-					photoheight = photowidth/photo.width * photo.height;
-				}
-				else {				
-					photoheight = canvas.height;
-					photowidth = photoheight/photo.height * photo.width;
-				}
-				
-                ctx.drawImage(photo, xpos, ypos, photowidth, photoheight);
-                renderFrame();
-            };
-        };
-    };
-
-	function resizeImage(){
-		console.log("asd");
-		clearFrame();
-		
-		if(photo.width < photo.height){
-			photowidth = $("#slider").slider("value")/50 * canvas.width;
-			photoheight = photowidth/photo.width * photo.height;
-		}
-		else {
-			photoheight = $("#slider").slider("value")/50 * canvas.height;			
-			photowidth = photoheight/photo.height * photo.width;
-		}
-		
-		ctx.drawImage(photo, xpos, ypos, photowidth, photoheight);
-		renderFrame();
-	};
-	
-	function moveImage(){
-		clearFrame();
-		ctx.drawImage(photo, xpos, ypos, photowidth, photoheight);
-		renderFrame();
-	};
-	
-	function saveImage(){
-		var dataURL = canvas.toDataURL("image/png");
-		window.open(dataURL);
-	}
-	
-    $(document).ready(function(){
-        renderFrame();
-    });
-	
-	$("#canvas").bind('mousedown touchstart', function(){
-		prevx = 0;
-		prevy = 0;
-		mouseDrag = true;
-	});
-	
-	$(window).bind('touchend mouseup', function(){	
-		prevx = 0;
-		prevy = 0;
-		mouseDrag = false;
-	});
-
-	$("#canvas").bind('mousemove', function(){
-		if(mouseDrag){
-			if( prevx>0 || prevy>0)
-			{
-				xpos += event.pageX - prevx;
-				ypos += event.pageY - prevy;
-				moveImage();
-			}
-			prevx = event.pageX;
-			prevy = event.pageY;
-		}
-	});
-	
-	$("#canvas").bind('touchmove', function(){
-		if(mouseDrag){
-			if( prevx>0 || prevy>0)
-			{
-				xpos += event.changedTouches[0].pageX - prevx;
-				ypos += event.changedTouches[0].pageY - prevy;
-				moveImage();
-			}
-			prevx = event.changedTouches[0].pageX;
-			prevy = event.changedTouches[0].pageY;
-		}
-	});
-	
-	$("#slider").slider({
-		value: 50,
-		min: 10,
-		max: 100,
-		step: 1,
-		slide : function(){
-			resizeImage();
-		}
-	});
-	
-</script>
+<script src="js/fitter.js"></script>
 </body>
 </html>

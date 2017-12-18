@@ -1,4 +1,13 @@
-
+	/**
+	 * Canvas Settings
+	 */
+	//Default width is 300x300
+	var saveScale = 2;
+	var maxScale = 5;
+	
+	/**
+	 * Function variables
+	 */
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
     var photo = new Image();
@@ -21,6 +30,10 @@
             ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
         };
     };
+	
+	function rerenderFrame(){
+		ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+	}
 	
 	function clearFrame(){
 		ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -50,7 +63,7 @@
 				}
 				
                 drawImage();
-                renderFrame();
+                rerenderFrame();
             };
         };
     };
@@ -68,19 +81,19 @@
 		}
 		
 		drawImage();
-		renderFrame();
+		rerenderFrame();
 	};
 	
 	function moveImage(){
 		clearFrame();
 		drawImage();
-		renderFrame();
+		rerenderFrame();
 	};
 	
 	function rotateImage(){
 		clearFrame();
 		drawImage();
-		renderFrame();
+		rerenderFrame();
 	}
 	
 	function drawImage(){
@@ -107,10 +120,31 @@
 		ctx.rotate(-rotation * Math.PI / 2);
 	}
 	
-	function saveImage(){
-		canvas.toBlob(function(blob){
+	function saveImage(){		
+		canvas.width = canvas.width * saveScale;
+		canvas.height = canvas.height * saveScale;
+		xpos = saveScale * xpos;
+		ypos = saveScale * ypos;
+		photowidth = photowidth * saveScale;
+		photoheight = photoheight * saveScale;
+		drawImage();
+		rerenderFrame();
+		
+		canvas.toBlob(function(blob){		
+			
+			//Revert
 			saveAs(blob, "frame.png");
 		});
+		
+		
+		canvas.width = canvas.width / saveScale;
+		canvas.height = canvas.height / saveScale;
+		xpos = xpos / saveScale;
+		ypos = ypos / saveScale;
+		photowidth = photowidth / saveScale;
+		photoheight = photoheight / saveScale;
+		drawImage();
+		rerenderFrame();
 	}
 	
     $(document).ready(function(){
@@ -158,7 +192,7 @@
 	$("#slider").slider({
 		value: 100,
 		min: 1,
-		max: 500,
+		max: 100*maxScale,
 		step: 1,
 		slide : function(){
 			resizeImage();

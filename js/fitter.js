@@ -108,8 +108,9 @@
 	}
 	
 	function saveImage(){
-		var dataURL = canvas.toDataURL("image/png");
-		window.open(dataURL);
+		canvas.toBlob(function(blob){
+			saveAs(blob, "frame.png");
+		});
 	}
 	
     $(document).ready(function(){
